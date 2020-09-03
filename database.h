@@ -1,29 +1,29 @@
 //
-// Created by ariel on 8/28/20.
+// Created by ariel on 9/3/20.
 //
 
-#ifndef TEST_DATABASE_H
-#define TEST_DATABASE_H
+#ifndef TEST_SQLITE3_DATABASE_H
+#define TEST_SQLITE3_DATABASE_H
 
-
+#include <string>
 #include "sqlite3.h"
 
 class database {
 private:
     sqlite3* db;
-    char *dbName;
+    std::string dbName;
     int rc;
     char *zErrMsg;
 
 public:
-    database(sqlite3* db, char *dbName){
+    database(sqlite3* db, std::string dbName){
         this->db=db;
         this->dbName=dbName;
         this->rc = 0;
         this->zErrMsg="null";
     }
 
-    char* getDBName(){
+    std::string getDBName(){
         return dbName;
     }
 
@@ -39,23 +39,27 @@ public:
     int closeDB();
 
     //generating query
-    void generateQCreateTable(char qry [], char *tableName, char *columns);
-    void generateQDropTable(char qry [],char *tableName);
-    void generateQShowInfo(char qry [],char *tableName);
-    void generateQInsertData(char *qry, char *tableName, int number);
-
-    int insertQ(char qry[]);
     void checkOK();
 
+    std::string generateQCreateTable(std::string tableName, std::string columns);
 
-    void create_table(char qry[], char *tableName, char *columns);
+    int insertQ(std::string qry);
 
-    void insertData(char *qry, char *tableName, int number);
+    void create_table(std::string tableName, std::string columns);
 
-    void showData(char *qry, char *tableName);
+    void insertData(std::string tableName, int number);
+
+    void showData(std::string tableName);
+
+    std::string generateQShowInfo(std::string tableName);
+
+    std::string generateQInsertData(std::string tableName, int number);
+
+    std::string generateQDropTable(std::string tableName);
+
+    void create_table_char();
 };
 
 const char* getLibVersion();
 
-
-#endif //TEST_DATABASE_H
+#endif //TEST_SQLITE3_DATABASE_H
