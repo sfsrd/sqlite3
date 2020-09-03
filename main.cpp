@@ -1,20 +1,22 @@
 #include <iostream>
+#include <sqlite3.h>
+#include <chrono>
 #include "database.h"
 
-int main() {
-    sqlite3* db;
-    char *tableName = "Info";
-    char *columns = "id INTEGER PRIMARY KEY AUTOINCREMENT, number INTEGER";
-    char qry[500];
-
-    database DB(db, "info.db");
+int main(int argc, char* argv[]) {
+    sqlite3 *db;
+    std::string dbName = "sensor_data.db";
+    std::string tableName = "Info";
+    std::string columns = "id INTEGER PRIMARY KEY AUTOINCREMENT, number INTEGER";
+    int64_t now;
+    database DB(db, dbName);
     DB.openDB();
-    DB.create_table(qry, tableName, columns);
+    DB.create_table(tableName, columns);
 
     for (int i =0; i<5; i++){
-        DB.insertData(qry, tableName, i);
+        now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        DB.insertData(tableName, now);
     }
-    DB.checkOK();
     DB.closeDB();
     return 0;
 }
